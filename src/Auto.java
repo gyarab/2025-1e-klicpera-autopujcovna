@@ -1,4 +1,7 @@
+// Trida Auto popisuje jedno konkretni auto v autopujcovne
+// Uklada jeho zakladni udaje, cenu, stav a jestli je zrovna volne
 public class Auto {
+    // Atributy auta - tyto hodnoty si objekt pamatuje po celou dobu programu.
     private int id;
     private String znacka;
     private String model;
@@ -8,6 +11,8 @@ public class Auto {
     private boolean jeVolne;
     private boolean tedPravePujcene;
 
+    // Konstruktor se zavola pri vytvoreni noveho objektu auta pres "new Auto..."
+    // Nastavi vsechny hodnoty a auto se na zacatku oznaci jako volne
     public Auto (int id, String znacka, String model, boolean jeManual, int rokVyroby, int cenaZaDen) {
         this.id = id;
         this.znacka = znacka;
@@ -69,6 +74,7 @@ public class Auto {
 
     public void setCenaZaDen(int cenaZaDen) {
 
+        // Kontrola, aby neslo zadat nesmyslnou cenu
         if (cenaZaDen <= 0) {
             throw new IllegalArgumentException("Cena nemůže být nižší nebo rovna 0");
         }
@@ -88,9 +94,10 @@ public class Auto {
     @Override
     public String toString() {
 
-//        variable = (condition) ? expressionTrue :  expressionFalse;
+        // variable = (condition) ? expressionTrue :  expressionFalse;
         String typPrevodovky = jeManual ? ", převodovka: manuální" : ", převodovka: automatická";
 
+        // Podle stavu auta se pripravi text, ktery se pak vypise v nabidce
         String isVolne;
         if (jeVolne) {
             isVolne = "auto je volné ";
@@ -101,6 +108,7 @@ public class Auto {
         }
 
 
+        // Vraceni celeho textoveho popisu auta pri vypsani auta
         return
                 "Id: " + id + ", " +
                 znacka +

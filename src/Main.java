@@ -1,7 +1,11 @@
 import java.util.Scanner;
 
-void main() {
+public class Main {
+    public static void main() {
+    // Scanner slouzi ke cteni vstupu od uzivatele z konzole.
     Scanner sc = new Scanner(System.in);
+
+    // Vytvoreni objektu aut
 
     Auto auto1 = new Auto(1,"Škoda", "Octavia 2 Combi", false, 2012, 550);
     Auto auto2 = new Auto(2,"Škoda", "Octavia 1 vRS", true, 2002, 1200);
@@ -20,7 +24,11 @@ void main() {
     Auto auto15 = new Auto(15, "Honda", "NSX", true, 1992, 3000);
     Auto auto16 = new Auto(16, "Volkswagen", "Golf Mk.IV", false, 2000, 500);
 
+    // Vytvoreni pujcovny - cela pujcovna je taky objekt
+
     Pujcovna pujcovna = new Pujcovna();
+
+    // Pridani aut do pujcovny pres metody add
 
     pujcovna.addAuto(auto1);
     pujcovna.addAuto(auto2);
@@ -39,16 +47,19 @@ void main() {
     pujcovna.addAuto(auto15);
     pujcovna.addAuto(auto16);
 
+// vytvoreni a pridani zakazniku do pujcovny
 
     Zakaznik zakaznik1 = new Zakaznik(1, "Lukáš", "Klicpera", 123456789);
 //    Zakaznik zakaznik2 = new Zakaznik(2, "Keichi", "Tsuchiya", 222333444);
 //    Zakaznik zakaznik3 = new Zakaznik(3, "Rowan", "Atkinson", 987654321);
 
+    // Zakaznik se musi pridat do pujcovny, aby ho pozdeji slo najit podle ID.
     pujcovna.addZakaznik(zakaznik1);
 //    pujcovna.addZakaznik(zakaznik2);
 //    pujcovna.addZakaznik(zakaznik3);
 
 
+// Zacatek menu - nejdrive vytvoreni vstupNum (diky podmince bezi podle hodnoty promenne nasledujici kod)
 
     int vstupNum;
 
@@ -59,7 +70,7 @@ void main() {
     System.out.println("Při půjčení třetího auta získáváte věrnostní slevu 15%!");
     System.out.println();
 
-    //Menu
+    // do loopa - vhodna pro pripady jako tenhle, kdy chceme aby bezel kod nez neco nenastane (v tomto pripade kdyz je vstupNum 0)
     do {
         System.out.println();
         System.out.println("Postupujte podle pokynů:");
@@ -76,14 +87,19 @@ void main() {
         System.out.println();
         vstupNum = sc.nextInt();
 
+        // Vypsani aut podle ceny diky metode serazeniCenaAVypis, ve ktere je dalsi metoda vypis aut
+
         if (vstupNum == 1) {
             pujcovna.serazeniCenaAVypis();
         }
+
+        // Vyhledavani auta podle modelu, pouzije se scanner, nahraje se vstup uzivatele do Stringu model, najdou se shody v Pujcovne a pokud se nic nenajde, program to vypise a skonci
 
         if (vstupNum == 2) {
             sc.nextLine();
             System.out.println("Zadejte model auta: ");
             String model = sc.nextLine();
+            // metoda findAuto vrati pole vsech aut, jejichz model se shoduje se vstupem uzivatele
             Auto[] nalezenaAuta =  pujcovna.findAuto(model);
             if (nalezenaAuta.length == 0) {
                 System.out.println("Nebyly nalezené žádné shody.");
@@ -91,43 +107,51 @@ void main() {
             }
 
             System.out.println("Nalezené shody: ");
+            // Pokud existuji shody, projdou se cyklem a vypisou se uzivateli
             for (int i = 0; i < nalezenaAuta.length; i++) {
                 System.out.println(nalezenaAuta[i]);
             }
         }
-
+        // Volba 3 resi pujcovani auta podle ID
         if (vstupNum == 3) {
             System.out.println();
             System.out.println("Zadejte ID auta, které si chcete půjčit:");
             int ID = sc.nextInt();
 
+            // Z pujcovny vezmeme pole aut, abychom v nem mohli najit auto podle zadaneho ID
             Auto[] getAutaMain = pujcovna.getAuta();
 
             Auto vybraneAuto = null;
-            for (int i = 0; i < getAutaMain.length; i++) {
+            // Loopa hleda auto s ID, ktere uzivatel zadal
+            for (int i = 0; i < pujcovna.getPocetAut(); i++) {
                 if (getAutaMain[i].getId() == ID) {
                     vybraneAuto = getAutaMain[i];
                     break;
                 }
             }
 
+            // Kdyz se zadne auto nenajde, program se vrati na zacatek menu
             if (vybraneAuto == null) {
                 System.out.println("ID se neshoduje s žádným nalezeným autem.");
                 System.out.println();
-                continue;
+                break;
             }
 
             System.out.println("Zadejte na kolik dní si chcete auto vypůjčit:");
             int dniPujcene = sc.nextInt();
+            // Zatim se pouziva zakaznik s ID 1 (neboli uzivatel pocitace, vice zakazniku je protoze jsem chtel aby projekt zpracovaval vice zakazniku, ale nechtel jsem to zbytecne zkomplikovavat pro uzivatele)
             Zakaznik zakaznik = pujcovna.findZakId(1);
 
+            // Samotne pujceni auta probiha v metode pujcitAuto ve tride Pujcovna, tady se jen metoda pouzije
             Pujcka pujcka =  pujcovna.pujcitAuto(dniPujcene, vybraneAuto, zakaznik);
 
 
             System.out.println("Pujcka: " + pujcka);
+            // Po vypsani aktualni pujcky se "specialni stav" TedPravePujcene vypne
             vybraneAuto.setTedPravePujcene(false);
         }
 
+        // Volba 4 umoznuje vratit auto zpet do pujcovny
         if (vstupNum == 4) {
             System.out.println("Zadejte ID auta, které chcete vrátit:");
             int idAuta = sc.nextInt();
@@ -135,11 +159,13 @@ void main() {
             System.out.println("Zadejte kolik dní jste skutečně auto měl:");
             int faktDniPujcene = sc.nextInt();
 
+            // Podle skutecneho poctu dni muze metoda vratitAuto pripocitat pokutu
             pujcovna.vratitAuto(idAuta, faktDniPujcene, zakaznik1);
         }
 
 
 
+        // Volba 5 filtruje auta podle maximalni denni ceny - skvele uplatnitelna schopnost online pujcovny
         if (vstupNum == 5) {
             System.out.println("Zadejte kolik nejvíce byste chtěli denně zaplatit za auto: ");
             int maxCena = sc.nextInt();
@@ -151,6 +177,7 @@ void main() {
 
 
 
+        // Volba 6 vypise jednoduche statistiky aktualniho stavu pujcovny - informace spise pro majitele pujcovny nez uzivatele, ale chtel jsem to sem zahrnout
         if (vstupNum == 6) {
             System.out.println("Momentálně je/jsou aktivní " + pujcovna.getPocetPujcek() + " půjček/ky.");
             System.out.println("Momentálně máme " + pujcovna.getPocetVolnychAut() + " volné/á/ých aut(o/a).");
@@ -159,6 +186,8 @@ void main() {
 
 
     }
+    // Jakmile uzivatel zada 0, nastavi se tak na 0 promenna vstupNum a podminka while loopy prestane platit, cimz program skonci
     while (vstupNum != 0);
 
+}
 }

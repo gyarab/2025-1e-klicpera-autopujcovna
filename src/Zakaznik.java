@@ -1,17 +1,19 @@
+// Trida Zakaznik uklada informace o jednom zakaznikovi autopujcovny, podobne jako trida Auto. Pamatuje si, kolikrat si uz zak. pujcil auto a ktera auta ma aktualne pujcena
 public class Zakaznik {
     private int id;
     private String jmeno;
     private String prijmeni;
     private int telCislo;
     private int pujckyCount;
+    // Pole pro auta, ktera ma zakaznik prave pujcena
     private Auto[] pujcenaAuta = new Auto[20];
 
-
-
+    // Pocet aktualne pujcenych aut urcuje, kolik mist v poli pujcenaAuta je obsazenych.
     private int pocetPujcenychAut = 0;
 
 
 
+    // Konstruktor nastavi zakladni udaje zakaznika
     public Zakaznik(int id, String jmeno, String prijmeni, int telCislo) {
         this.id = id;
         this.jmeno = jmeno;
@@ -21,6 +23,7 @@ public class Zakaznik {
 
 
 
+    // Zvysi celkovy pocet pujcek zakaznika, podle tohoto cisla se pozdeji urcuje pripadna vernostni sleva
     public void zvyseniPoctuZakPujcek() {
         pujckyCount++;
     }
@@ -62,12 +65,13 @@ public class Zakaznik {
         return pujckyCount;
     }
 
-
+    // Pri vraceni auta se snizi pocet aktualne pujcenych aut
     public void snizPocetPujcek(){
         pocetPujcenychAut--;
         System.out.println("Auto bylo vráceno, zbývající půjčená auta: " + pocetPujcenychAut);
     }
 
+    // Prida auto mezi auta, ktera ma zakaznik zrovna pujcena
     public void setPujceneAuto(Auto pujceneAuto) {
         pocetPujcenychAut++;
         for (int i = 0; i < pocetPujcenychAut; i++) {
@@ -75,6 +79,7 @@ public class Zakaznik {
         }
     }
 
+    // Vypise auta, ktera ma zakaznik aktualne pujcena
     public void vypisPujcenychAut() {
         for (int i = 0; i < pocetPujcenychAut; i++) {
             System.out.println(pujcenaAuta[i]);
